@@ -9,11 +9,6 @@ const { Pool } = pg;
   let clientOpts;
   let pool;
 
-  console.log(`process.env.CLOUD_SQL_SOCKET = '${process.env.CLOUD_SQL_SOCKET}'`);
-  console.log(`process.env.DB_NAME = '${process.env.DB_NAME}'`);
-  console.log(`process.env.DB_USER = '${process.env.DB_USER}'`);
-  console.log(`process.env.DB_PASSWORD = '${process.env.DB_PASSWORD}'`);
-
   try {
     connector = new Connector();
     clientOpts = await connector.getOptions({
@@ -24,12 +19,17 @@ const { Pool } = pg;
     pool = new Pool({
       ...clientOpts,
       type: 'postgres',
-      database: process.env.DB_NAME,      // 'postgres'
-      user: process.env.DB_USER,          // 'postgres'
 
-      idleTimeoutMillis:   600000, // 10 minutes
-      createTimeoutMillis:   5000, //  5 seconds
-      acquireTimeoutMillis:  5000, //  5 seconds
+      database: process.env.DB_NAME,      // 'postgres'
+      // this can be any database name found on the instance
+
+      user: process.env.DB_USER,          // 'service account e-mail`
+      // NOTE: without the ".gserviceaccount.com" domain suffix!
+      // NOTE: don't forget to GRANT necessary privileges for this user!
+
+      idleTimeoutMillis: 600000, // 10 minutes
+      createTimeoutMillis: 5000, //  5 seconds
+      acquireTimeoutMillis: 5000, //  5 seconds
     });
   } catch (e) {
     console.error(e);
