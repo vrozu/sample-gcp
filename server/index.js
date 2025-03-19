@@ -18,7 +18,7 @@ const { Pool } = pg;
     connector = new Connector();
     clientOpts = await connector.getOptions({
       instanceConnectionName: process.env.CLOUD_SQL_SOCKET, // 'PROJECT:REGION:INSTANCE'
-      authType: 'PASSWORD',
+      authType: 'IAM',
       ipType: 'PRIVATE',
     });
     pool = new Pool({
@@ -26,7 +26,7 @@ const { Pool } = pg;
       type: 'postgres',
       database: process.env.DB_NAME,      // 'postgres'
       user: process.env.DB_USER,          // 'postgres'
-      password: process.env.DB_PASSWORD,  // 'password'
+      // password: process.env.DB_PASSWORD,  // 'password'
 
       idleTimeoutMillis:   600000, // 10 minutes
       createTimeoutMillis:   5000, //  5 seconds
