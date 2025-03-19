@@ -26,6 +26,10 @@ const { Pool } = pg;
       database: process.env.DB_NAME,      // 'postgres'
       user: process.env.DB_USER,          // 'postgres'
       password: process.env.DB_PASSWORD,  // 'password'
+
+      idleTimeoutMillis:   600000, // 10 minutes
+      createTimeoutMillis:   5000, //  5 seconds
+      acquireTimeoutMillis:  5000, //  5 seconds
     });
   } catch (e) {
     console.error(e);
