@@ -24,10 +24,8 @@ const { Pool } = pg;
     pool = new Pool({
       ...clientOpts,
       type: 'postgres',
-      ssl: false,
       database: process.env.DB_NAME,      // 'postgres'
       user: process.env.DB_USER,          // 'postgres'
-      password: null,
 
       idleTimeoutMillis:   600000, // 10 minutes
       createTimeoutMillis:   5000, //  5 seconds
