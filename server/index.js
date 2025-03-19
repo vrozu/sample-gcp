@@ -18,7 +18,7 @@ const { Pool } = pg;
     connector = new Connector();
     clientOpts = await connector.getOptions({
       instanceConnectionName: process.env.CLOUD_SQL_SOCKET, // 'PROJECT:REGION:INSTANCE'
-      // authType: 'IAM',
+      authType: 'PASSWORD',
       ipType: 'PRIVATE',
     });
     pool = new Pool({
