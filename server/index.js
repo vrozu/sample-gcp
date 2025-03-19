@@ -17,13 +17,14 @@ const { Pool } = pg;
     connector = new Connector();
     clientOpts = await connector.getOptions({
       instanceConnectionName: process.env.CLOUD_SQL_SOCKET, // 'PROJECT:REGION:INSTANCE'
-      authType: 'IAM',
+      // authType: 'IAM',
       ipType: 'PRIVATE',
     });
     pool = new Pool({
       ...clientOpts,
-      user: process.env.DB_USER,      // 'postgres'
-      database: process.env.DB_NAME,  // 'postgres'
+      database: process.env.DB_NAME,      // 'postgres'
+      user: process.env.DB_USER,          // 'postgres'
+      password: process.env.DB_PASSWORD,  // 'password'
     });
   } catch (e) {
     console.error(e);
