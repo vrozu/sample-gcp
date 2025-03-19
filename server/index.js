@@ -35,7 +35,7 @@ const { Pool } = pg;
     res.send('Hello World!');
   });
 
-  app.get('/db-init', async () => {
+  app.get('/db-init', async (req, res) => {
     try {
       await pool.query(`CREATE TABLE IF NOT EXISTS visits (
       id SERIAL NOT NULL,
