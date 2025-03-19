@@ -10,8 +10,9 @@ const { Pool } = pg;
   let pool;
 
   console.log(`process.env.CLOUD_SQL_SOCKET = '${process.env.CLOUD_SQL_SOCKET}'`);
-  console.log(`process.env.DB_USER = '${process.env.DB_USER}'`);
   console.log(`process.env.DB_NAME = '${process.env.DB_NAME}'`);
+  console.log(`process.env.DB_USER = '${process.env.DB_USER}'`);
+  console.log(`process.env.DB_PASSWORD = '${process.env.DB_PASSWORD}'`);
 
   try {
     connector = new Connector();
