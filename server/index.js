@@ -24,6 +24,7 @@ const { Pool } = pg;
     pool = new Pool({
       ...clientOpts,
       type: 'postgres',
+      ssl: { rejectUnauthorized: false },
       database: process.env.DB_NAME,      // 'postgres'
       user: process.env.DB_USER,          // 'postgres'
       // password: process.env.DB_PASSWORD,  // 'password'
