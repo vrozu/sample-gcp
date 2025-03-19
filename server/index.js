@@ -24,7 +24,6 @@ const { Pool } = pg;
     pool = new Pool({
       ...clientOpts,
       database: process.env.DB_NAME,      // 'postgres'
-      port: 5432,
       user: process.env.DB_USER,          // 'postgres'
       password: process.env.DB_PASSWORD,  // 'password'
 
