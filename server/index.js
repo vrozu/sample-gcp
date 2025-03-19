@@ -5,18 +5,28 @@ const Connector = require('@google-cloud/cloud-sql-connector').Connector;
 const { Pool } = pg;
 
 (async () => {
+  let connector;
+  let clientOpts;
+  let pool;
 
-  const connector = new Connector();
-  const clientOpts = await connector.getOptions({
-    instanceConnectionName: process.env.CLOUD_SQL_SOCKET,
-    authType: 'IAM'
-  });
+  console.log(`process.env.CLOUD_SQL_SOCKET = '${process.env.CLOUD_SQL_SOCKET}'`);
+  console.log(`process.env.DB_USER = '${process.env.DB_USER}'`);
+  console.log(`process.env.DB_NAME = '${process.env.DB_NAME}'`);
 
-  const pool = new Pool({
-    ...clientOpts,
-    user: process.env.DB_USER,
-    database: process.env.DB_NAME
-  });
+  try {
+    connector = new Connector();
+    clientOpts = await connector.getOptions({
+      instanceConnectionName: process.env.CLOUD_SQL_SOCKET,
+      authType: 'IAM'
+    });
+    pool = new Pool({
+      ...clientOpts,
+      user: process.env.DB_USER,
+      database: process.env.DB_NAME
+    });
+  } catch (e) {
+    console.error(e);
+  }
 
   const app = express();
   const port = 3000;
@@ -42,6 +52,7 @@ const { Pool } = pg;
 
   app.get('/db-test', async (req, res) => {
     let response;
+
     try {
       await pool.query('INSERT INTO visits(created_at) VALUES(NOW())');
       response = await pool.query('SELECT created_at FROM visits ORDER BY created_at DESC LIMIT 5');
@@ -57,9 +68,8 @@ const { Pool } = pg;
     }
   });
 
-  app.listen(port, '0.0.0.0', async () => {
-    console.log('process.env: ', process.env);
-    console.log(`helloworld: listening on port ${port}`);
+  app.listen(port, '0.0.0.0', () => {
+    console.log('app is listening on port 3000; allows requests from 0.0.0.0;');
   });
 
 })();
