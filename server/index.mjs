@@ -17,6 +17,7 @@ const pool = new Pool({
 });
 
 const app = express();
+const port = 3000;
 
 app.get('/', (req, res) => {
   res.send('Hello World!');
@@ -29,8 +30,7 @@ app.get('/db', async (req, res) => {
   res.send(rows);
 });
 
-const port = parseInt(process.env.PORT) || 8080;
-app.listen(port, async () => {
+app.listen(port, '0.0.0.0', async () => {
   console.log('process.env: ', process.env);
   await pool.query(`CREATE TABLE IF NOT EXISTS visits (
     id SERIAL NOT NULL,
