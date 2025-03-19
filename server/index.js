@@ -27,7 +27,7 @@ const { Pool } = pg;
       ssl: false,
       database: process.env.DB_NAME,      // 'postgres'
       user: process.env.DB_USER,          // 'postgres'
-      // password: process.env.DB_PASSWORD,  // 'password'
+      password: null,
 
       idleTimeoutMillis:   600000, // 10 minutes
       createTimeoutMillis:   5000, //  5 seconds
