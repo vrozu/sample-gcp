@@ -145,7 +145,8 @@ const PROJECT_ID = 'projects/test-foresite';
         name: name,
       });
 
-      responsePayload = version.payload.data;
+      const payload = version.payload.data.toString();
+      responsePayload.payload = payload;
     } catch (err) {
       return res.status(500).send(JSON.stringify({
         msg: 'Could not extract secret details.',
