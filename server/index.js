@@ -90,7 +90,7 @@ const { Pool } = pg;
 
     try {
       const [secrets] = await client.listSecrets({
-        parent: parent,
+        parent: 'projects/test-foresite',
       });
 
       secrets.forEach(secret => {
