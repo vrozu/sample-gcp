@@ -6,6 +6,8 @@ const { SecretManagerServiceClient } = require('@google-cloud/secret-manager');
 
 const { Pool } = pg;
 
+const PROJECT_ID = 'projects/test-foresite';
+
 (async () => {
   let connector;
   let clientOpts;
@@ -95,7 +97,7 @@ const { Pool } = pg;
 
     try {
       const [secrets] = await client.listSecrets({
-        parent: 'projects/test-foresite',
+        parent: PROJECT_ID,
       });
 
       secrets.forEach(secret => {
@@ -103,20 +105,56 @@ const { Pool } = pg;
           ? secret.replication.userManaged
           : secret.replication.automatic;
 
-          responsePayload.push({
+        responsePayload.push({
           name: secret.name,
           policy,
         });
       });
     } catch (err) {
       return res.status(500).send(JSON.stringify({
-        msg: 'Could not parse secrets',
+        msg: 'Could not get list of secrets.',
         err,
       }));
     }
 
     return res.status(200).send(JSON.stringify(responsePayload));
   });
+
+  app.get('/secret/:id', async (req, res) => {
+    var secretId = req.params.id;
+
+    let client;
+
+    try {
+      client = new SecretManagerServiceClient();
+    } catch (err) {
+      return res.status(500).send(JSON.stringify({
+        msg: 'Could not initialize SecretManagerServiceClient',
+        err,
+      }));
+    }
+
+    const responsePayload = {};
+
+    // Construct the fully qualified name of the secret version.
+    const name = `${PROJECT_ID}/secrets/${secretId}/versions/latest`;
+
+    try {
+      // Access the secret version.
+      const [version] = await client.accessSecretVersion({
+        name: name,
+      });
+
+      responsePayload = version.payload.data;
+    } catch (err) {
+      return res.status(500).send(JSON.stringify({
+        msg: 'Could not extract secret details.',
+        err,
+      }));
+    }
+
+    return res.status(200).send(JSON.stringify(responsePayload));
+  })
 
   app.listen(port, '0.0.0.0', () => {
     console.log('app is listening on port 3000; allows requests from 0.0.0.0;');
