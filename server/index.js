@@ -152,7 +152,36 @@ const PROJECT_ID = 'projects/test-foresite';
     }
 
     return res.status(200).send(JSON.stringify(responsePayload));
-  })
+  });
+
+  app.delete('/secret/:id', async (req, res) => {
+    const secretId = req.params.id;
+
+    let client;
+
+    try {
+      client = new SecretManagerServiceClient();
+    } catch (err) {
+      return res.status(500).send(JSON.stringify({
+        msg: 'Could not initialize SecretManagerServiceClient',
+        err,
+      }));
+    }
+
+    try {
+      await client.deleteSecret({
+        name: secretId,
+      });
+    } catch (err) {
+      return res.status(500).send(JSON.stringify({
+        msg: 'Could not delete the secret with given name.',
+        err,
+      }));
+    }
+
+    console.log(`Deleted secret ${secretId}`);
+    return res.status(200).send(JSON.stringify({ok: 'ok'}));
+  });
 
   app.post('/new-secret', async (req, res) => {
     const secretId = req.body.secretId;
