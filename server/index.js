@@ -154,7 +154,7 @@ const PROJECT_ID = 'projects/test-foresite';
     return res.status(200).send(JSON.stringify(responsePayload));
   })
 
-  app.post('/new-secret/:id', async (req, res) => {
+  app.post('/new-secret', async (req, res) => {
     const secretId = req.body.secretId;
     const secretValue = (typeof req.body.secretValue === 'string') ? req.body.secretValue : '';
 
