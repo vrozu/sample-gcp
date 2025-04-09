@@ -207,7 +207,7 @@ const PROJECT_ID = 'projects/test-foresite';
 
     // only alpha numeric characters and dash allowed
     const regexAllowed =  /^[a-zA-Z0-9-]+$/;
-    if (!regexAllowed.test(secretId)) {
+    if (!regexAllowed.test(secretId.trim())) {
       return res.status(500).send(JSON.stringify({
         msg: 'Provided secret name should only contain alpha numeric characters and a dash.',
         err: null,
@@ -223,7 +223,7 @@ const PROJECT_ID = 'projects/test-foresite';
     try {
       const [secret] = await client.createSecret({
         parent: PROJECT_ID,
-        secretId,
+        secretId: secretId.trim(),
         secret: secretConfig,
       });
       console.log(`Created secret ${secret.name}`);
@@ -237,7 +237,7 @@ const PROJECT_ID = 'projects/test-foresite';
     try {
       const payload = Buffer.from(secretValue, 'utf8');
       const [version] = await client.addSecretVersion({
-        parent: `${PROJECT_ID}/secrets/${secretId}`,
+        parent: `${PROJECT_ID}/secrets/${secretId.trim()}`,
         payload: {
           data: payload,
         },
