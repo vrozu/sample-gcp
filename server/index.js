@@ -1,6 +1,7 @@
 const express = require('express');
 const pg = require('pg');
 const Connector = require('@google-cloud/cloud-sql-connector').Connector;
+const { SecretManagerServiceClient } = require('@google-cloud/secret-manager');
 
 const { Pool } = pg;
 
@@ -73,6 +74,41 @@ const { Pool } = pg;
     } else {
       res.send('no data')
     }
+  });
+
+  app.get('/secrets', async (req, res) => {
+    let client;
+
+    try {
+      client = new SecretManagerServiceClient();
+    } catch (err) {
+      res.send(JSON.stringify(err));
+      return;
+    }
+
+    const response = [];
+
+    try {
+      const [secrets] = await client.listSecrets({
+        parent: parent,
+      });
+
+      secrets.forEach(secret => {
+        const policy = secret.replication.userManaged
+          ? secret.replication.userManaged
+          : secret.replication.automatic;
+
+        response.push({
+          name: secret.name,
+          policy,
+        });
+      });
+    } catch (err) {
+      res.send(JSON.stringify(err));
+      return;
+    }
+
+    res.json(response);
   });
 
   app.listen(port, '0.0.0.0', () => {
