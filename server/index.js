@@ -170,7 +170,7 @@ const PROJECT_ID = 'projects/test-foresite';
 
     try {
       await client.deleteSecret({
-        name: secretId,
+        name: `${PROJECT_ID}/secrets/${secretId}`,
       });
     } catch (err) {
       return res.status(500).send(JSON.stringify({
