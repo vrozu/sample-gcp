@@ -157,6 +157,60 @@ const PROJECT_ID = 'projects/test-foresite';
     return res.status(200).send(JSON.stringify(responsePayload));
   })
 
+  app.get('/new-secret/:id', async () => {
+    var secretId = req.params.id;
+
+    let client;
+
+    try {
+      client = new SecretManagerServiceClient();
+    } catch (err) {
+      return res.status(500).send(JSON.stringify({
+        msg: 'Could not initialize SecretManagerServiceClient',
+        err,
+      }));
+    }
+
+    const responsePayload = {};
+
+    if (typeof secretId !== 'string') {
+      return res.status(500).send(JSON.stringify({
+        msg: 'Provided secret name is not a string.',
+        err: null,
+      }));
+    }
+
+    // only alpha numeric characters and dash allowed
+    const regexAllowed =  /^[a-zA-Z0-9-]+$/;
+    if (!regexAllowed.test(secretId)) {
+      return res.status(500).send(JSON.stringify({
+        msg: 'Provided secret name should only contain alpha numeric characters and a dash.',
+        err: null,
+      }));
+    }
+
+    const secretConfig = {
+      replication: {
+        automatic: {},
+      },
+    };
+
+    try {
+      const [secret] = await client.createSecret({
+        parent: PROJECT_ID,
+        secretId,
+        secret: secretConfig,
+      });
+    } catch (err) {
+      return res.status(500).send(JSON.stringify({
+        msg: 'Could not create a secret with the given name.',
+        err,
+      }));
+    }
+
+    return res.status(200).send(JSON.stringify({ok: 'ok'}));
+  });
+
   app.listen(port, '0.0.0.0', () => {
     console.log('app is listening on port 3000; allows requests from 0.0.0.0;');
   });
