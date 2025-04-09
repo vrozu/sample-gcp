@@ -41,6 +41,7 @@ const PROJECT_ID = 'projects/test-foresite';
 
   const app = express();
   app.use(cors())
+  app.use(express.json());
 
   const port = 3000;
 
@@ -121,7 +122,7 @@ const PROJECT_ID = 'projects/test-foresite';
   });
 
   app.get('/secret/:id', async (req, res) => {
-    var secretId = req.params.id;
+    const secretId = req.params.id;
 
     let client;
 
@@ -136,13 +137,9 @@ const PROJECT_ID = 'projects/test-foresite';
 
     const responsePayload = {};
 
-    // Construct the fully qualified name of the secret version.
-    const name = `${PROJECT_ID}/secrets/${secretId}/versions/latest`;
-
     try {
-      // Access the secret version.
       const [version] = await client.accessSecretVersion({
-        name: name,
+        name: `${PROJECT_ID}/secrets/${secretId}/versions/latest`,
       });
 
       const payload = version.payload.data.toString();
@@ -157,8 +154,9 @@ const PROJECT_ID = 'projects/test-foresite';
     return res.status(200).send(JSON.stringify(responsePayload));
   })
 
-  app.get('/new-secret/:id', async (req, res) => {
-    var secretId = req.params.id;
+  app.post('/new-secret/:id', async (req, res) => {
+    const secretId = req.body.secretId;
+    const secretValue = (typeof req.body.secretValue === 'string') ? req.body.secretValue : '';
 
     let client;
 
@@ -170,8 +168,6 @@ const PROJECT_ID = 'projects/test-foresite';
         err,
       }));
     }
-
-    const responsePayload = {};
 
     if (typeof secretId !== 'string') {
       return res.status(500).send(JSON.stringify({
@@ -201,9 +197,26 @@ const PROJECT_ID = 'projects/test-foresite';
         secretId,
         secret: secretConfig,
       });
+      console.log(`Created secret ${secret.name}`);
     } catch (err) {
       return res.status(500).send(JSON.stringify({
         msg: 'Could not create a secret with the given name.',
+        err,
+      }));
+    }
+
+    try {
+      const payload = Buffer.from(secretValue, 'utf8');
+      const [version] = await client.addSecretVersion({
+        parent: `${PROJECT_ID}/secrets/${secretId}`,
+        payload: {
+          data: payload,
+        },
+      });
+      console.log(`Added secret version ${version.name}`);
+    } catch (err) {
+      return res.status(500).send(JSON.stringify({
+        msg: 'Could not add initial revision with secret value.',
         err,
       }));
     }
