@@ -82,11 +82,13 @@ const { Pool } = pg;
     try {
       client = new SecretManagerServiceClient();
     } catch (err) {
-      res.send(JSON.stringify(err));
-      return;
+      return res.status(500).send(JSON.stringify({
+        msg: 'Could not initialize SecretManagerServiceClient',
+        err,
+      }));
     }
 
-    const response = [];
+    const responsePayload = [];
 
     try {
       const [secrets] = await client.listSecrets({
@@ -98,17 +100,19 @@ const { Pool } = pg;
           ? secret.replication.userManaged
           : secret.replication.automatic;
 
-        response.push({
+          responsePayload.push({
           name: secret.name,
           policy,
         });
       });
     } catch (err) {
-      res.send(JSON.stringify(err));
-      return;
+      return res.status(500).send(JSON.stringify({
+        msg: 'Could not parse secrets',
+        err,
+      }));
     }
 
-    res.json(response);
+    return res.status(200).send(JSON.stringify(responsePayload));
   });
 
   app.listen(port, '0.0.0.0', () => {
