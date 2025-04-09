@@ -20,6 +20,7 @@
   "dependencies": {
     "@google-cloud/cloud-sql-connector": "^1.7.0",
     "@google-cloud/secret-manager": "^6.0.1",
+    "cors": "^2.8.5",
     "express": "^4.21.2",
     "pg": "^8.14.1"
   },

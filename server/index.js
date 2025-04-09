@@ -1,4 +1,5 @@
 const express = require('express');
+var cors = require('cors')
 const pg = require('pg');
 const Connector = require('@google-cloud/cloud-sql-connector').Connector;
 const { SecretManagerServiceClient } = require('@google-cloud/secret-manager');
@@ -37,6 +38,8 @@ const { Pool } = pg;
   }
 
   const app = express();
+  app.use(cors())
+
   const port = 3000;
 
   app.get('/', (req, res) => {
