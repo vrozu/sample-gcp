@@ -293,7 +293,7 @@ const PROJECT_ID = 'projects/test-foresite';
       apiResponse = await client.request({
         url,
         method: 'patch',
-        data: req.body,
+        data: { annotations: req.body },
       });
     } catch (err) {
       return res.status(500).send(JSON.stringify({
