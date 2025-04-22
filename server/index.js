@@ -271,12 +271,38 @@ const PROJECT_ID = 'projects/test-foresite';
       });
     } catch (err) {
       return res.status(500).send(JSON.stringify({
-        msg: 'Could not invoke Google Cloud API.',
+        msg: 'Could not invoke Google Cloud API for annotation retrieval.',
         err,
       }));
     }
 
-    return res.status(200).send(JSON.stringify({ok: 'ok', data: apiResponse.data}));
+    return res.status(200).send(JSON.stringify({data: apiResponse.data}));
+  });
+
+  app.post('/secret-annotations/:id', async (req, res) => {
+    const secretId = req.params.id;
+    let apiResponse;
+
+    try {
+      const auth = new GoogleAuth({
+        scopes: 'https://www.googleapis.com/auth/cloud-platform'
+      });
+      const client = await auth.getClient();
+      const projectId = await auth.getProjectId();
+      const url = `https://secretmanager.googleapis.com/v1/projects/${projectId}/secrets/${secretId}?updateMask=annotations`;
+      apiResponse = await client.request({
+        url,
+        method: 'patch',
+        data: req.body,
+      });
+    } catch (err) {
+      return res.status(500).send(JSON.stringify({
+        msg: 'Could not invoke Google Cloud API for annotation creation..',
+        err,
+      }));
+    }
+
+    return res.status(200).send(JSON.stringify({data: apiResponse.data}));
   });
 
   app.listen(port, '0.0.0.0', () => {
