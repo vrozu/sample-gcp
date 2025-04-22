@@ -254,7 +254,8 @@ const PROJECT_ID = 'projects/test-foresite';
     return res.status(200).send(JSON.stringify({ok: 'ok'}));
   });
 
-  app.post('/secret-annotations', async (req, res) => {
+  app.get('/secret-annotations/:id', async (req, res) => {
+    const secretId = req.params.id;
     let apiResponse;
 
     try {
@@ -263,8 +264,11 @@ const PROJECT_ID = 'projects/test-foresite';
       });
       const client = await auth.getClient();
       const projectId = await auth.getProjectId();
-      const url = `https://dns.googleapis.com/dns/v1/projects/${projectId}`;
-      apiResponse = await client.request({ url });
+      const url = `https://secretmanager.googleapis.com/v1/projects/${projectId}/secrets/${secretId}`;
+      apiResponse = await client.request({
+        url,
+        method: 'get',
+      });
     } catch (err) {
       return res.status(500).send(JSON.stringify({
         msg: 'Could not invoke Google Cloud API.',
