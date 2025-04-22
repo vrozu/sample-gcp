@@ -276,7 +276,7 @@ const PROJECT_ID = 'projects/test-foresite';
       }));
     }
 
-    return res.status(200).send(JSON.stringify({data: apiResponse.data}));
+    return res.status(200).send(JSON.stringify(apiResponse?.data?.annotations));
   });
 
   app.post('/secret-annotations/:id', async (req, res) => {
@@ -302,7 +302,7 @@ const PROJECT_ID = 'projects/test-foresite';
       }));
     }
 
-    return res.status(200).send(JSON.stringify({data: apiResponse.data}));
+    return res.status(200).send(JSON.stringify({ok: "ok"}));
   });
 
   app.listen(port, '0.0.0.0', () => {
