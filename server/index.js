@@ -356,7 +356,7 @@ const PROJECT_ID = 'projects/test-foresite';
     let rawResponse;
     const ATLASSIAN_PROJECT = 'rozuvan';
 
-    let error
+    let error = {};
 
     try {
       rawResponse = await axios.post(
@@ -387,13 +387,35 @@ const PROJECT_ID = 'projects/test-foresite';
         },
       );
     } catch (err3) {
-      error = err3;
+      if (err3.response) {
+        // The request was made and the server responded with a status code
+        // that falls out of the range of 2xx
+        error.data = err3.response.data; // Error data sent by the server
+        error.status = err3.response.status; // HTTP status code (e.g., 404, 500)
+        error.headers = err3.response.headers; // Response headers
+      }
+
+      if (err3.request) {
+        // The request was made but no response was received
+        // `error.request` is an instance of XMLHttpRequest in the browser and an instance of
+        // http.ClientRequest in node.js
+        error.request = err3.request;
+      }
+
+      if (err3.message) {
+        // Something happened in setting up the request that triggered an Error
+        error.message = err3.message;
+      }
+
+      if (err3.config) {
+        error.config = err3.config;
+      }
     }
 
     return res
       .setHeader('content-type', 'application/json')
       .status(200)
-      .send(JSON.stringify({ token, issueIdOrKey, commentContent, error }))
+      .send(JSON.stringify({ token, issueIdOrKey, commentContent, error, rawResponse }))
   });
 
   app.listen(port, '0.0.0.0', () => {
