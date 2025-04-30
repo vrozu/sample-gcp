@@ -416,7 +416,14 @@ const PROJECT_ID = 'projects/test-foresite';
     return res
       .setHeader('content-type', 'application/json')
       .status(200)
-      .send(JSON.stringify({ token, issueIdOrKey, commentContent, error, rawResponse }))
+      .send(JSON.stringify({
+        token,
+        issueIdOrKey,
+        commentContent,
+        error,
+        rawResponseData: (rawResponse && rawResponse.data) ?
+          rawResponse.data : null
+      }))
   });
 
   app.listen(port, '0.0.0.0', () => {
