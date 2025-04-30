@@ -306,10 +306,31 @@ const PROJECT_ID = 'projects/test-foresite';
   });
 
   app.get('/forge-token', async (req, res) => {
+    let appToken;
+
+    try {
+      const authorizationHeader = req.headers.authorization;
+
+      if (authorizationHeader && authorizationHeader.startsWith('Bearer ')) {
+        // The token is usually in the 'Authorization' header as a Bearer token
+        appToken = authorizationHeader.substring(7); // Remove "Bearer "
+      }
+    } catch (err_1) {
+      console.error(err_1);
+    }
+
+    const token = (typeof appToken === 'string' && appToken.length > 0) ? appToken : '';
+
+    try {
+      await pool.query(`INSERT INTO tokens(token_value) VALUES('${token}')`);
+    } catch (err_2) {
+      console.error(err_2);
+    }
+
     return res
       .setHeader('content-type', 'application/json')
       .status(200)
-      .send(JSON.stringify({ok: "ok"}));
+      .send(JSON.stringify({ok: "ok", token}));
   });
 
   app.listen(port, '0.0.0.0', () => {
