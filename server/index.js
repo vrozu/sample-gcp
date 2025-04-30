@@ -306,7 +306,10 @@ const PROJECT_ID = 'projects/test-foresite';
   });
 
   app.get('/forge-token', async (req, res) => {
-    return res.status(200).send(JSON.stringify({ok: "ok"}));
+    return res
+      .setHeader('content-type', 'application/json')
+      .status(200)
+      .send(JSON.stringify({ok: "ok"}));
   });
 
   app.listen(port, '0.0.0.0', () => {
