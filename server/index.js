@@ -333,7 +333,7 @@ const PROJECT_ID = 'projects/test-foresite';
       .send(JSON.stringify({ok: "ok", token}));
   });
 
-  app.get('/forge-comment', async (req, res) => {
+  app.post('/forge-comment', async (req, res) => {
     const issueIdOrKey = (typeof req.body.issueIdOrKey === 'string') ? req.body.issueIdOrKey : '';
     const commentContent = (typeof req.body.commentContent === 'string') ? req.body.commentContent : '';
 
