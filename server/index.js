@@ -346,7 +346,7 @@ const PROJECT_ID = 'projects/test-foresite';
       return res
         .setHeader('content-type', 'application/json')
         .status(200)
-        .send(JSON.stringify({ token: response.rows }))
+        .send(JSON.stringify({ token: response.rows[0].token_value }))
     } else {
       return res
         .setHeader('content-type', 'application/json')
