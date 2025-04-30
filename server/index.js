@@ -362,7 +362,24 @@ const PROJECT_ID = 'projects/test-foresite';
       rawResponse = await axios.post(
         `https://${ATLASSIAN_PROJECT}.atlassian.net/rest/api/3/issue/${issueIdOrKey}/comment`,
         {
-          params: {},
+          params: {
+            "body": {
+              "type": "doc",
+              "version": 1,
+              "content": [
+                {
+                  "type": "paragraph",
+                  "content": [
+                    {
+                      "type": "text",
+                      "text": commentContent,
+                    }
+                  ]
+                }
+              ]
+            },
+            "visibility": {}
+          },
           headers: {
             Authorization: `Bearer ${token}`,
             Accept: "application/json",
