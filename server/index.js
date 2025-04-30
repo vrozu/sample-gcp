@@ -334,6 +334,9 @@ const PROJECT_ID = 'projects/test-foresite';
   });
 
   app.get('/forge-comment', async (req, res) => {
+    const issueIdOrKey = (typeof req.body.issueIdOrKey === 'string') ? req.body.issueIdOrKey : '';
+    const commentContent = (typeof req.body.commentContent === 'string') ? req.body.commentContent : '';
+
     let response;
 
     try {
@@ -342,17 +345,38 @@ const PROJECT_ID = 'projects/test-foresite';
       console.error(err_1);
     }
 
+    let token;
+
     if (response && response.rows) {
-      return res
-        .setHeader('content-type', 'application/json')
-        .status(200)
-        .send(JSON.stringify({ token: response.rows[0].token_value }))
+      token = response.rows[0].token_value;
     } else {
-      return res
-        .setHeader('content-type', 'application/json')
-        .status(200)
-        .send(JSON.stringify({ token: '' }))
+      token = '';
     }
+
+    let rawResponse;
+    const ATLASSIAN_PROJECT = 'rozuvan';
+
+    let error
+
+    try {
+      rawResponse = await axios.post(
+        `https://${ATLASSIAN_PROJECT}.atlassian.net/rest/api/3/issue/${issueIdOrKey}/comment`,
+        {
+          params: {},
+          headers: {
+            Authorization: `Bearer ${token}`,
+            Accept: "application/json",
+          },
+        },
+      );
+    } catch (err3) {
+      error = err3;
+    }
+
+    return res
+      .setHeader('content-type', 'application/json')
+      .status(200)
+      .send(JSON.stringify({ token, issueIdOrKey, commentContent, error }))
   });
 
   app.listen(port, '0.0.0.0', () => {
