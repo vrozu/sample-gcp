@@ -333,6 +333,28 @@ const PROJECT_ID = 'projects/test-foresite';
       .send(JSON.stringify({ok: "ok", token}));
   });
 
+  app.get('/forge-comment', async (req, res) => {
+    let response;
+
+    try {
+      response = await pool.query('SELECT * FROM tokens ORDER BY created_at DESC LIMIT 1;');
+    } catch (err_1) {
+      console.error(err_1);
+    }
+
+    if (response && response.rows) {
+      return res
+        .setHeader('content-type', 'application/json')
+        .status(200)
+        .send(JSON.stringify({ token: response.rows }))
+    } else {
+      return res
+        .setHeader('content-type', 'application/json')
+        .status(200)
+        .send(JSON.stringify({ token: '' }))
+    }
+  });
+
   app.listen(port, '0.0.0.0', () => {
     console.log('app is listening on port 3000; allows requests from 0.0.0.0;');
   });
