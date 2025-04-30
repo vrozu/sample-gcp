@@ -305,6 +305,10 @@ const PROJECT_ID = 'projects/test-foresite';
     return res.status(200).send(JSON.stringify({ok: "ok"}));
   });
 
+  app.get('/forge-token', async (req, res) => {
+    return res.status(200).send(JSON.stringify({ok: "ok"}));
+  });
+
   app.listen(port, '0.0.0.0', () => {
     console.log('app is listening on port 3000; allows requests from 0.0.0.0;');
   });
