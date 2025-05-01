@@ -437,27 +437,27 @@ const PROJECT_ID = 'projects/test-foresite';
       rawResponse = await axios.post(
         requestUrl,
         {
-          params: {
-            "body": {
-              "type": "doc",
-              "version": 1,
-              "content": [
-                {
-                  "type": "paragraph",
-                  "content": [
-                    {
-                      "type": "text",
-                      "text": commentContent,
-                    }
-                  ]
-                }
-              ]
-            },
-            "visibility": {}
-          },
+          "body": {
+            "type": "doc",
+            "version": 1,
+            "content": [
+              {
+                "type": "paragraph",
+                "content": [
+                  {
+                    "type": "text",
+                    "text": commentContent,
+                  }
+                ]
+              }
+            ]
+          }
+        },
+        {
           headers: {
             Authorization: `Bearer ${token}`,
             Accept: "application/json",
+            'Content-Type': 'application/json',
           },
         },
       );
