@@ -359,9 +359,11 @@ const PROJECT_ID = 'projects/test-foresite';
 
     let error = {};
 
+    const requestUrl = `https://${ATLASSIAN_PROJECT}.atlassian.net/rest/api/3/issue/${issueIdOrKey}/comment`;
+
     try {
       rawResponse = await axios.post(
-        `https://${ATLASSIAN_PROJECT}.atlassian.net/rest/api/3/issue/${issueIdOrKey}/comment`,
+        requestUrl,
         {
           params: {
             "body": {
@@ -409,6 +411,7 @@ const PROJECT_ID = 'projects/test-foresite';
         token,
         issueIdOrKey,
         commentContent,
+        requestUrl,
         error,
         rawResponseData: (rawResponse && rawResponse.data) ?
           rawResponse.data : null
