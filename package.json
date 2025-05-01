@@ -24,6 +24,7 @@
     "cors": "^2.8.5",
     "express": "^4.21.2",
     "google-auth-library": "^9.15.1",
+    "jose": "^6.0.10",
     "pg": "^8.14.1"
   },
   "devDependencies": {

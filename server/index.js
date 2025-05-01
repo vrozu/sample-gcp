@@ -1,4 +1,5 @@
 const axios = require('axios');
+const { jwtDecode } = require('jose');
 const express = require('express');
 var cors = require('cors')
 const pg = require('pg');
@@ -310,7 +311,7 @@ const PROJECT_ID = 'projects/test-foresite';
     console.log(`req.headers['x-forge-oauth-system'] = '${req.headers['x-forge-oauth-system']}'`);
     console.log(`req.headers['x-forge-oauth-user'] = '${req.headers['x-forge-oauth-user']}'`);
 
-    /*
+    // ---------------- get APP api URL
     let appToken;
     try {
       const authorizationHeader = req.headers.authorization;
@@ -323,8 +324,28 @@ const PROJECT_ID = 'projects/test-foresite';
       console.error(_err);
     }
 
-    const token = (typeof appToken === 'string' && appToken.length > 0) ? appToken : '';
-    */
+    const systemToken = (typeof appToken === 'string' && appToken.length > 0) ? appToken : '';
+
+    try {
+      const decoded = jwtDecode(systemToken);
+
+      if (decoded && decoded.app && decoded.app.installationId) {
+        const installationId = decoded.app.installationId;
+        console.log(`Extracted installationId (using jose): ${installationId}`);
+      } else {
+        console.error("Could not find installationId in the token (using jose).");
+      }
+
+      if (decoded && decoded.app && decoded.app.apiBaseUrl) {
+        const apiBaseUrl = decoded.app.apiBaseUrl;
+        console.log(`Extracted apiBaseUrl (using jose): ${apiBaseUrl}`);
+      } else {
+        console.error("Could not find apiBaseUrl in the token (using jose).");
+      }
+    } catch (error) {
+      console.error("Error decoding the JWT (using jose):", error);
+    }
+    // ------- end of get APP api URL
 
     const token = req.headers['x-forge-oauth-system'];
 
