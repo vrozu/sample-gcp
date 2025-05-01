@@ -368,14 +368,13 @@ const PROJECT_ID = 'projects/test-foresite';
       rawResponse = await axios.post(
         requestUrl,
         {
-          params: {
-            one: 'one',
-            two: 'two',
-          },
+          issueIdOrKey,
+          commentContent,
         },
         {
           headers: {
             Authorization: `Bearer ${token}`,
+            'x-forge-oauth-system': token,
             Accept: "application/json",
           },
         }
