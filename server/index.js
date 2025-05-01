@@ -366,6 +366,8 @@ const PROJECT_ID = 'projects/test-foresite';
             one: 'one',
             two: 'two',
           },
+        },
+        {
           headers: {
             Authorization: `Bearer ${token}`,
             Accept: "application/json",
