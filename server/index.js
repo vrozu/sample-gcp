@@ -311,6 +311,12 @@ const PROJECT_ID = 'projects/test-foresite';
     console.log(`req.headers['x-forge-oauth-system'] = '${req.headers['x-forge-oauth-system']}'`);
     console.log(`req.headers['x-forge-oauth-user'] = '${req.headers['x-forge-oauth-user']}'`);
 
+    let installationId = '';
+    let apiBaseUrl = '';
+    let appId = '';
+    let environmentType = '';
+    let environmentId = '';
+
     // ---------------- get APP api URL
     let appToken;
     try {
@@ -330,17 +336,38 @@ const PROJECT_ID = 'projects/test-foresite';
       const decoded = jose.decodeJwt(systemToken);
 
       if (decoded && decoded.app && decoded.app.installationId) {
-        const installationId = decoded.app.installationId;
+        installationId = decoded.app.installationId;
         console.log(`Extracted installationId (using jose): ${installationId}`);
       } else {
         console.error("Could not find installationId in the token (using jose).");
       }
 
       if (decoded && decoded.app && decoded.app.apiBaseUrl) {
-        const apiBaseUrl = decoded.app.apiBaseUrl;
+        apiBaseUrl = decoded.app.apiBaseUrl;
         console.log(`Extracted apiBaseUrl (using jose): ${apiBaseUrl}`);
       } else {
         console.error("Could not find apiBaseUrl in the token (using jose).");
+      }
+
+      if (decoded && decoded.app && decoded.app.id) {
+        appId = decoded.app.id;
+        console.log(`Extracted appId (using jose): ${appId}`);
+      } else {
+        console.error("Could not find appId in the token (using jose).");
+      }
+
+      if (decoded && decoded.app && decoded.app.environment && decoded.app.environment.type) {
+        environmentType = decoded.app.environment.type;
+        console.log(`Extracted environmentType (using jose): ${environmentType}`);
+      } else {
+        console.error("Could not find environmentType in the token (using jose).");
+      }
+
+      if (decoded && decoded.app && decoded.app.environment && decoded.app.environment.id) {
+        environmentId = decoded.app.environment.id;
+        console.log(`Extracted environmentId (using jose): ${environmentId}`);
+      } else {
+        console.error("Could not find environmentId in the token (using jose).");
       }
     } catch (error) {
       console.error("Error decoding the JWT (using jose):", error);
@@ -349,8 +376,14 @@ const PROJECT_ID = 'projects/test-foresite';
 
     const token = req.headers['x-forge-oauth-system'];
 
+    // let installationId = '';
+    // let apiBaseUrl = '';
+    // let appId = '';
+    // let environmentType = '';
+    // let environmentId = '';
+
     try {
-      await pool.query(`INSERT INTO tokens(token_value) VALUES('${token}')`);
+      await pool.query(`INSERT INTO tokens_next(token_value, installation_id, api_base_url, app_id, environment_type, environment_id) VALUES('${token}', '${installationId}', '${apiBaseUrl}', '${appId}', '${environmentType}', '${environmentId}')`);
     } catch (err_2) {
       console.error(err_2);
     }
@@ -368,7 +401,7 @@ const PROJECT_ID = 'projects/test-foresite';
     let response;
 
     try {
-      response = await pool.query('SELECT * FROM tokens ORDER BY created_at DESC LIMIT 1;');
+      response = await pool.query('SELECT * FROM tokens_next ORDER BY created_at DESC LIMIT 1;');
     } catch (_err) {
       console.error(_err);
     }
@@ -436,7 +469,7 @@ const PROJECT_ID = 'projects/test-foresite';
     let response;
 
     try {
-      response = await pool.query('SELECT * FROM tokens ORDER BY created_at DESC LIMIT 1;');
+      response = await pool.query('SELECT * FROM tokens_next ORDER BY created_at DESC LIMIT 1;');
     } catch (_err) {
       console.error(_err);
     }
@@ -449,12 +482,18 @@ const PROJECT_ID = 'projects/test-foresite';
       token = '';
     }
 
-    let rawResponse;
-    const ATLASSIAN_PROJECT = 'rozuvan';
+    let apiBaseUrl;
 
+    if (response && response.rows) {
+      token = response.rows[0].api_base_url;
+    } else {
+      token = '';
+    }
+
+    let rawResponse;
     let error = {};
 
-    const requestUrl = `https://${ATLASSIAN_PROJECT}.atlassian.net/rest/api/3/issue/${issueIdOrKey}/comment`;
+    const requestUrl = `${apiBaseUrl}/rest/api/3/issue/${issueIdOrKey}/comment`;
 
     try {
       rawResponse = await axios.post(
