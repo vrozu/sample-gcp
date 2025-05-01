@@ -396,20 +396,9 @@ const PROJECT_ID = 'projects/test-foresite';
         error.headers = err3.response.headers; // Response headers
       }
 
-      if (err3.request) {
-        // The request was made but no response was received
-        // `error.request` is an instance of XMLHttpRequest in the browser and an instance of
-        // http.ClientRequest in node.js
-        error.request = err3.request;
-      }
-
       if (err3.message) {
         // Something happened in setting up the request that triggered an Error
         error.message = err3.message;
-      }
-
-      if (err3.config) {
-        error.config = err3.config;
       }
     }
 
