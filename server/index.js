@@ -1,7 +1,7 @@
 const axios = require('axios');
-import * as jose from 'jose';
+const jose = require('jose')
 const express = require('express');
-var cors = require('cors')
+const cors = require('cors')
 const pg = require('pg');
 const Connector = require('@google-cloud/cloud-sql-connector').Connector;
 const { SecretManagerServiceClient } = require('@google-cloud/secret-manager');
