@@ -306,7 +306,7 @@ const PROJECT_ID = 'projects/test-foresite';
     return res.status(200).send(JSON.stringify({ok: "ok"}));
   });
 
-  app.get('/forge-token', async (req, res) => {
+  app.get('/forge-token-2', async (req, res) => {
     let appToken;
 
     try {
