@@ -334,6 +334,73 @@ const PROJECT_ID = 'projects/test-foresite';
       .send(JSON.stringify({ok: "ok", token}));
   });
 
+  app.post('/forge-direct-comment', async (req, res) => {
+    const issueIdOrKey = (typeof req.body.issueIdOrKey === 'string') ? req.body.issueIdOrKey : '';
+    const commentContent = (typeof req.body.commentContent === 'string') ? req.body.commentContent : '';
+
+    let response;
+
+    try {
+      response = await pool.query('SELECT * FROM tokens ORDER BY created_at DESC LIMIT 1;');
+    } catch (err_1) {
+      console.error(err_1);
+    }
+
+    let token;
+
+    if (response && response.rows) {
+      token = response.rows[0].token_value;
+    } else {
+      token = '';
+    }
+
+    let rawResponse;
+    let error = {};
+    const requestUrl = 'https://4174ace3-7376-4b47-a064-cd41702f640e.hello.atlassian-dev.net/x1/I4Szy7GAkYXl5ENYaxoJLWSc18M';
+
+    try {
+      rawResponse = await axios.post(
+        requestUrl,
+        {
+          params: {
+            one: 'one',
+            two: 'two',
+          },
+          headers: {
+            Authorization: `Bearer ${token}`,
+            Accept: "application/json",
+          },
+        }
+      )
+    } catch (err10) {
+      if (err3.response) {
+        // The request was made and the server responded with a status code
+        // that falls out of the range of 2xx
+        error.data = err3.response.data; // Error data sent by the server
+        error.status = err3.response.status; // HTTP status code (e.g., 404, 500)
+        error.headers = err3.response.headers; // Response headers
+      }
+
+      if (err3.message) {
+        // Something happened in setting up the request that triggered an Error
+        error.message = err3.message;
+      }
+    }
+
+    return res
+      .setHeader('content-type', 'application/json')
+      .status(200)
+      .send(JSON.stringify({
+        token,
+        issueIdOrKey,
+        commentContent,
+        requestUrl,
+        error,
+        rawResponseData: (rawResponse && rawResponse.data) ?
+          rawResponse.data : null
+      }))
+  });
+
   app.post('/forge-comment', async (req, res) => {
     const issueIdOrKey = (typeof req.body.issueIdOrKey === 'string') ? req.body.issueIdOrKey : '';
     const commentContent = (typeof req.body.commentContent === 'string') ? req.body.commentContent : '';
