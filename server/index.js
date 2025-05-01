@@ -373,8 +373,8 @@ const PROJECT_ID = 'projects/test-foresite';
         },
         {
           headers: {
-            Authorization: `Bearer ${token}`,
-            'x-forge-oauth-system': token,
+            // Authorization: `Bearer ${token}`,
+            // 'x-forge-oauth-system': token,
             Accept: "application/json",
           },
         }
