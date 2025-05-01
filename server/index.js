@@ -485,9 +485,9 @@ const PROJECT_ID = 'projects/test-foresite';
     let apiBaseUrl;
 
     if (response && response.rows) {
-      token = response.rows[0].api_base_url;
+      apiBaseUrl = response.rows[0].api_base_url;
     } else {
-      token = '';
+      apiBaseUrl = '';
     }
 
     let rawResponse;
