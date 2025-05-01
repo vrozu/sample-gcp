@@ -1,5 +1,5 @@
 const axios = require('axios');
-const { jwtDecode } = require('jose');
+import * as jose from 'jose';
 const express = require('express');
 var cors = require('cors')
 const pg = require('pg');
@@ -327,7 +327,7 @@ const PROJECT_ID = 'projects/test-foresite';
     const systemToken = (typeof appToken === 'string' && appToken.length > 0) ? appToken : '';
 
     try {
-      const decoded = jwtDecode(systemToken);
+      const decoded = jose.decodeJwt(systemToken);
 
       if (decoded && decoded.app && decoded.app.installationId) {
         const installationId = decoded.app.installationId;
