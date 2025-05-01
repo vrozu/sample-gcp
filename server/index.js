@@ -316,8 +316,8 @@ const PROJECT_ID = 'projects/test-foresite';
         // The token is usually in the 'Authorization' header as a Bearer token
         appToken = authorizationHeader.substring(7); // Remove "Bearer "
       }
-    } catch (err_1) {
-      console.error(err_1);
+    } catch (_err) {
+      console.error(_err);
     }
 
     const token = (typeof appToken === 'string' && appToken.length > 0) ? appToken : '';
@@ -342,8 +342,8 @@ const PROJECT_ID = 'projects/test-foresite';
 
     try {
       response = await pool.query('SELECT * FROM tokens ORDER BY created_at DESC LIMIT 1;');
-    } catch (err_1) {
-      console.error(err_1);
+    } catch (_err) {
+      console.error(_err);
     }
 
     let token;
@@ -372,18 +372,18 @@ const PROJECT_ID = 'projects/test-foresite';
           },
         }
       )
-    } catch (err10) {
-      if (err3.response) {
+    } catch (_err) {
+      if (_err.response) {
         // The request was made and the server responded with a status code
         // that falls out of the range of 2xx
-        error.data = err3.response.data; // Error data sent by the server
-        error.status = err3.response.status; // HTTP status code (e.g., 404, 500)
-        error.headers = err3.response.headers; // Response headers
+        error.data = _err.response.data; // Error data sent by the server
+        error.status = _err.response.status; // HTTP status code (e.g., 404, 500)
+        error.headers = _err.response.headers; // Response headers
       }
 
-      if (err3.message) {
+      if (_err.message) {
         // Something happened in setting up the request that triggered an Error
-        error.message = err3.message;
+        error.message = _err.message;
       }
     }
 
@@ -409,8 +409,8 @@ const PROJECT_ID = 'projects/test-foresite';
 
     try {
       response = await pool.query('SELECT * FROM tokens ORDER BY created_at DESC LIMIT 1;');
-    } catch (err_1) {
-      console.error(err_1);
+    } catch (_err) {
+      console.error(_err);
     }
 
     let token;
@@ -456,18 +456,18 @@ const PROJECT_ID = 'projects/test-foresite';
           },
         },
       );
-    } catch (err3) {
-      if (err3.response) {
+    } catch (_err) {
+      if (_err.response) {
         // The request was made and the server responded with a status code
         // that falls out of the range of 2xx
-        error.data = err3.response.data; // Error data sent by the server
-        error.status = err3.response.status; // HTTP status code (e.g., 404, 500)
-        error.headers = err3.response.headers; // Response headers
+        error.data = _err.response.data; // Error data sent by the server
+        error.status = _err.response.status; // HTTP status code (e.g., 404, 500)
+        error.headers = _err.response.headers; // Response headers
       }
 
-      if (err3.message) {
+      if (_err.message) {
         // Something happened in setting up the request that triggered an Error
-        error.message = err3.message;
+        error.message = _err.message;
       }
     }
 
