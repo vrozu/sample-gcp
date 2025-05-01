@@ -307,11 +307,11 @@ const PROJECT_ID = 'projects/test-foresite';
   });
 
   app.get('/forge-token-2', async (req, res) => {
-    let appToken;
-
     console.log(`req.headers['x-forge-oauth-system'] = '${req.headers['x-forge-oauth-system']}'`);
     console.log(`req.headers['x-forge-oauth-user'] = '${req.headers['x-forge-oauth-user']}'`);
 
+    /*
+    let appToken;
     try {
       const authorizationHeader = req.headers.authorization;
 
@@ -324,6 +324,9 @@ const PROJECT_ID = 'projects/test-foresite';
     }
 
     const token = (typeof appToken === 'string' && appToken.length > 0) ? appToken : '';
+    */
+
+    const token = req.headers['x-forge-oauth-system'];
 
     try {
       await pool.query(`INSERT INTO tokens(token_value) VALUES('${token}')`);
