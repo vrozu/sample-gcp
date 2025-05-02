@@ -391,7 +391,7 @@ const PROJECT_ID = 'projects/test-foresite';
     return res
       .setHeader('content-type', 'application/json')
       .status(200)
-      .send(JSON.stringify({ok: "ok", token}));
+      .send(JSON.stringify({ok: "ok"}));
   });
 
   app.post('/forge-direct-comment', async (req, res) => {
@@ -452,7 +452,6 @@ const PROJECT_ID = 'projects/test-foresite';
       .setHeader('content-type', 'application/json')
       .status(200)
       .send(JSON.stringify({
-        token,
         issueIdOrKey,
         commentContent,
         requestUrl,
@@ -542,7 +541,6 @@ const PROJECT_ID = 'projects/test-foresite';
       .setHeader('content-type', 'application/json')
       .status(200)
       .send(JSON.stringify({
-        token,
         issueIdOrKey,
         commentContent,
         requestUrl,
