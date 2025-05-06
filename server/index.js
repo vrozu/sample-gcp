@@ -391,7 +391,7 @@ const PROJECT_ID = 'projects/test-foresite';
     return res
       .setHeader('content-type', 'application/json')
       .status(200)
-      .send(JSON.stringify({ok: "ok"}));
+      .send(JSON.stringify({ ok: "Token valid" }));
   });
 
   app.post('/forge-direct-comment', async (req, res) => {
